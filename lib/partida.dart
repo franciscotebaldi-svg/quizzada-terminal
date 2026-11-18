@@ -88,7 +88,9 @@ class Partida {
         if (escolhas[k] == pergunta.respostaCorreta) {
           jogador.pontos += pergunta.dificuldade.pontos;
           jogador.acertos++;
-          print('${jogador.nome}: Acertou! +${pergunta.dificuldade.pontos} pontos.');
+          print(
+            '${jogador.nome}: Acertou! +${pergunta.dificuldade.pontos} pontos.',
+          );
         } else {
           print('${jogador.nome}: Errou!');
         }

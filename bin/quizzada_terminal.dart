@@ -40,7 +40,9 @@ void main() {
     },
   ];
 
-  final todasPerguntas = dadosPerguntas.map((mapa) => Pergunta.fromMap(mapa)).toList();
+  final todasPerguntas = dadosPerguntas
+      .map((mapa) => Pergunta.fromMap(mapa))
+      .toList();
 
   // 1. Quantidade e cadastro de vários jogadores
   int qtdJogadores = 0;

@@ -30,3 +30,7 @@ Com o Dart instalado na máquina, abra o terminal na pasta do projeto e rode:
 
 ```bash
 dart run
+
+Segue abaixo o link do vídeo de explicação no youtube:
+https://youtu.be/rPFiG5aN6XA
+

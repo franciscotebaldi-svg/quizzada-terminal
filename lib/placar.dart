@@ -28,7 +28,9 @@ class PlacarEstrelas extends Placar {
       final j = jogadores[i];
       final estrelas = '★' * j.acertos + '☆' * (totalPerguntas - j.acertos);
       print('${i + 1}º ${j.nome} [$estrelas]');
-      print('   Pontos: ${j.pontos}/$totalPontos (${j.acertos}/$totalPerguntas acertos)');
+      print(
+        '   Pontos: ${j.pontos}/$totalPontos (${j.acertos}/$totalPerguntas acertos)',
+      );
     }
     print('******************************');
   }
