@@ -14,8 +14,8 @@ class Pergunta {
   });
 
   Pergunta.fromMap(Map<String, dynamic> mapa)
-      : texto = mapa['texto'] as String,
-        alternativas = List<String>.from(mapa['alternativas']),
-        respostaCorreta = mapa['respostaCorreta'] as int,
-        dificuldade = Dificuldade.values.byName(mapa['dificuldade'] as String);
+    : texto = mapa['texto'] as String,
+      alternativas = List<String>.from(mapa['alternativas']),
+      respostaCorreta = mapa['respostaCorreta'] as int,
+      dificuldade = Dificuldade.values.byName(mapa['dificuldade'] as String);
 }
