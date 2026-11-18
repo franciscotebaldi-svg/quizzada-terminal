@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'jogador.dart';
 import 'pergunta.dart';
+import 'placar.dart';
 
 class RespostaInvalidaException implements Exception {
   final String mensagem;
@@ -13,17 +14,15 @@ class RespostaInvalidaException implements Exception {
 }
 
 class Partida {
-  final Jogador jogador;
+  final List<Jogador> jogadores;
   final List<Pergunta> perguntas;
+  final Placar placar;
 
-  Partida({required this.jogador, required this.perguntas});
-
-  int get totalPontosPossiveis {
-    return perguntas.fold(
-      0,
-      (soma, pergunta) => soma + pergunta.dificuldade.pontos,
-    );
-  }
+  Partida({
+    required this.jogadores,
+    required this.perguntas,
+    required this.placar,
+  });
 
   int validarResposta(String? entrada) {
     final texto = entrada?.trim().toUpperCase() ?? '';
@@ -40,22 +39,20 @@ class Partida {
       );
     }
 
-    const opcoesValidas = ['A', 'B', 'C', 'D'];
-    final indice = opcoesValidas.indexOf(texto);
+    if (texto == 'A') return 0;
+    if (texto == 'B') return 1;
+    if (texto == 'C') return 2;
+    if (texto == 'D') return 3;
 
-    if (indice == -1) {
-      throw RespostaInvalidaException(
-        'Opção "$texto" não existe. Digite apenas A, B, C ou D.',
-      );
-    }
-
-    return indice;
+    throw RespostaInvalidaException(
+      'Opção "$texto" não existe. Digite apenas A, B, C ou D.',
+    );
   }
 
   void iniciar() {
     const letras = ['A', 'B', 'C', 'D'];
 
-    print('\nBem-vindo(a) ao Quizzada, ${jogador.nome}! Vamos começar.');
+    print('\nVamos começar o Quizzada!');
 
     for (var i = 0; i < perguntas.length; i++) {
       final pergunta = perguntas[i];
@@ -69,41 +66,45 @@ class Partida {
         print('  [${letras[j]}] ${pergunta.alternativas[j]}');
       }
 
-      int? indiceEscolhido;
-      while (indiceEscolhido == null) {
-        stdout.write('Qual a sua escolha? ');
-        final entrada = stdin.readLineSync();
+      final escolhas = <int>[];
 
-        try {
-          indiceEscolhido = validarResposta(entrada);
-        } on RespostaInvalidaException catch (e) {
-          print('Ops! $e');
+      for (final jogador in jogadores) {
+        int? indiceEscolhido;
+        while (indiceEscolhido == null) {
+          stdout.write('Vez de ${jogador.nome} - Qual a sua escolha? ');
+          final entrada = stdin.readLineSync();
+
+          try {
+            indiceEscolhido = validarResposta(entrada);
+          } on RespostaInvalidaException catch (e) {
+            print('Ops! $e');
+          }
+        }
+        escolhas.add(indiceEscolhido);
+      }
+
+      for (var k = 0; k < jogadores.length; k++) {
+        final jogador = jogadores[k];
+        if (escolhas[k] == pergunta.respostaCorreta) {
+          jogador.pontos += pergunta.dificuldade.pontos;
+          jogador.acertos++;
+          print('${jogador.nome}: Acertou! +${pergunta.dificuldade.pontos} pontos.');
+        } else {
+          print('${jogador.nome}: Errou!');
         }
       }
 
-      if (indiceEscolhido == pergunta.respostaCorreta) {
-        jogador.pontos += pergunta.dificuldade.pontos;
-        jogador.acertos++;
-        print('Mandou bem! +${pergunta.dificuldade.pontos} pontos.');
-      } else {
-        final letraCerta = letras[pergunta.respostaCorreta];
-        final textoCerto = pergunta.alternativas[pergunta.respostaCorreta];
-        print(
-          'Não foi dessa vez! A alternativa correta era [$letraCerta] $textoCerto.',
-        );
-      }
+      final letraCerta = letras[pergunta.respostaCorreta];
+      final textoCerto = pergunta.alternativas[pergunta.respostaCorreta];
+      print('Resposta correta: [$letraCerta] $textoCerto.');
     }
 
-    exibirPlacar();
-  }
+    final totalPontosPossiveis = perguntas.fold(
+      0,
+      (soma, pergunta) => soma + pergunta.dificuldade.pontos,
+    );
 
-  void exibirPlacar() {
-    print('\n==============================');
-    print('      RESULTADO FINAL');
-    print('==============================');
-    print('Jogador: ${jogador.nome}');
-    print('Pontuação: ${jogador.pontos} de $totalPontosPossiveis pontos');
-    print('Acertos: ${jogador.acertos} de ${perguntas.length} questões');
-    print('==============================');
+    jogadores.sort((a, b) => b.pontos.compareTo(a.pontos));
+    placar.exibir(jogadores, totalPontosPossiveis, perguntas.length);
   }
 }
