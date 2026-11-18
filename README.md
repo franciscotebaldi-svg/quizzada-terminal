@@ -1,25 +1,28 @@
-# Quizzada de Terminal v1
+# Quizzada de Terminal
 
-Projeto de um jogo de perguntas e respostas (quiz) feito em **Dart** que roda direto no terminal.
+Projeto de um jogo de perguntas e respostas (quiz) feito em **Dart** que roda direto no terminal, incluindo todas as funcionalidades obrigatórias e os desafios bônus.
 
 ## Como o jogo funciona
 
-1. Primeiro, o programa pede o seu nome. Se você der Enter sem escrever nada, ele avisa e pede de novo.
-2. Depois começam as 5 perguntas sobre Dart básico, cada uma com 4 opções (`A`, `B`, `C` ou `D`).
-3. Cada pergunta tem uma dificuldade que muda quantos pontos ela vale:
+1. **Vários jogadores:** Primeiro, o programa pergunta quantas pessoas vão jogar e pede o nome de cada uma. Se der Enter sem escrever nada, ele avisa e pede de novo.
+2. **Filtro por dificuldade:** Antes de começar, você escolhe se quer jogar apenas com perguntas fáceis, apenas difíceis ou com todas (usando `where`).
+3. **Escolha do placar:** Você também escolhe como quer ver o resultado final: no formato **simples** ou **com estrelas**.
+4. **Rodada de perguntas e embaralhamento:** Em cada questão, as alternativas são embaralhadas (`shuffle`) para não ficarem sempre na mesma ordem. Os jogadores se revezam respondendo à mesma pergunta antes de o jogo revelar qual era a certa.
+5. **Pontuação por nível:**
    - **Fácil:** 10 pontos
    - **Média:** 20 pontos
    - **Difícil:** 30 pontos
-4. Você pode digitar a letra tanto em minúsculo quanto em maiúsculo. Se digitar algo inválido (como vazio, mais de uma letra ou outra letra que não seja A, B, C ou D), o programa mostra um aviso sem travar e pergunta novamente.
-5. A cada resposta ele diz se você acertou ou mostra qual era a certa. No final, aparece o placar com seus pontos e quantas questões você acertou.
+6. **Validação de respostas:** Você pode digitar a letra (`A`, `B`, `C` ou `D`) tanto em minúsculo quanto em maiúsculo. Se digitar vazio, mais de uma letra ou uma opção inválida, o programa mostra um aviso sem travar e pede a resposta novamente.
+7. **Ranking final:** No fim da partida, os jogadores são ordenados do maior para o menor número de pontos (`sort`) e exibidos no estilo de placar escolhido.
 
 ## O que tem em cada arquivo
 
-- `bin/quizzada_terminal.dart`: Onde o programa começa (`main`), cria a lista de perguntas e inicia o jogo.
+- `bin/quizzada_terminal.dart`: Onde o programa começa (`main`), cadastra os jogadores, filtra as perguntas por dificuldade, embaralha as alternativas e inicia o jogo.
 - `lib/dificuldade.dart`: O `enum` com as dificuldades e os pontos de cada uma.
-- `lib/pergunta.dart`: A classe `Pergunta` com o `fromMap` para montar cada questão.
-- `lib/jogador.dart`: A classe `Jogador` que guarda o nome, os pontos e os acertos.
-- `lib/partida.dart`: A classe `Partida` que roda o quiz, valida as respostas usando exceção personalizada e calcula o total de pontos com `fold`.
+- `lib/pergunta.dart`: A classe `Pergunta` com o construtor `fromMap` e o método `embaralhar()` que mistura as opções sem perder o índice da resposta certa.
+- `lib/jogador.dart`: A classe `Jogador` que guarda o nome, os pontos e os acertos de cada participante.
+- `lib/placar.dart`: A classe abstrata `Placar` e suas duas implementações (`PlacarSimples` e `PlacarEstrelas`).
+- `lib/partida.dart`: A classe `Partida` (e a exceção personalizada `RespostaInvalidaException`) que gerencia o revezamento dos turnos, valida as respostas, calcula o total de pontos com `fold` e ordena o ranking com `sort`.
 
 ## Como rodar
 
